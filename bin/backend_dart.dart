@@ -1,11 +1,13 @@
 import 'package:shelf/shelf.dart';
-import 'package:shelf/shelf_io.dart' as shelf_io;
 
 import 'api/blog_api.dart';
 import 'api/login_api.dart';
 import 'infra/custom_server.dart';
+import 'utils/utils.dart';
 
 void main() async {
+  CustomEnv.fromFile('.env');
+
   var cascadeHandler = Cascade()
       .add(
         LoginApi().handler,
@@ -21,5 +23,9 @@ void main() async {
       )
       .addHandler(cascadeHandler);
 
-  await CustomServer().initialize(handler);
+  await CustomServer().initialize(
+    handler: handler,
+    address: await CustomEnv.get<String>(key: 'server_address'),
+    port: await CustomEnv.get<int>(key: 'server_port'),
+  );
 }
