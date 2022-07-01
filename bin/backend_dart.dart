@@ -1,6 +1,7 @@
 import 'package:shelf/shelf.dart';
 
 import 'api/api.dart';
+import 'infra/header_requisition_middleware.dart';
 import 'infra/infra.dart';
 import 'services/services.dart';
 import 'utils/utils.dart';
@@ -20,6 +21,9 @@ void main() async {
   var handler = Pipeline()
       .addMiddleware(
         logRequests(),
+      )
+      .addMiddleware(
+        HeaderRequisitionMiddleware().applicationJsonMiddleware,
       )
       .addHandler(cascadeHandler);
 
