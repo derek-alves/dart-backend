@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 
@@ -5,28 +7,23 @@ import '../models/publication.dart';
 import '../services/services.dart';
 
 class PublicationApi {
-  final GenericService _service;
+  final GenericService<Publication> _service;
 
   PublicationApi(this._service);
   Handler get handler {
     Router router = Router();
 
     router.get("/blog/noticias", (Request req) {
-      _service.findAll();
-      return Response.ok('Choveu hoje');
+      List<Publication> publications = _service.findAll();
+      return Response.ok(
+        jsonEncode(publications.map((e) => e.toJson()).toList()),
+      );
     });
 
-    router.post("/blog/noticias", (Request req) {
-      _service.save(
-        Publication(
-          id: 0,
-          title: "titulo",
-          body: "descrição",
-          image: 'aaaaa',
-          publicationDate: DateTime.now(),
-        ),
-      );
-      return Response.ok('Choveu hoje');
+    router.post("/blog/noticias", (Request req) async {
+      var body = await req.readAsString();
+      _service.save(Publication.fromJson(jsonDecode(body)));
+      return Response(201);
     });
 
     router.put("/blog/noticias", (Request req) {
