@@ -1,4 +1,4 @@
-class New {
+class Publication {
   final int id;
   final String title;
   final String body;
@@ -6,7 +6,7 @@ class New {
   final DateTime publicationDate;
   final DateTime? updateDate;
 
-  New({
+  Publication({
     required this.id,
     required this.title,
     required this.body,
