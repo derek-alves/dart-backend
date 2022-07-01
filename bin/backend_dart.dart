@@ -1,8 +1,8 @@
 import 'package:shelf/shelf.dart';
 
-import 'api/blog_api.dart';
-import 'api/login_api.dart';
-import 'infra/custom_server.dart';
+import 'api/api.dart';
+import 'infra/infra.dart';
+import 'services/services.dart';
 import 'utils/utils.dart';
 
 void main() async {
@@ -13,7 +13,7 @@ void main() async {
         LoginApi().handler,
       )
       .add(
-        BlogApi().handler,
+        PublicationApi(PublicationService()).handler,
       )
       .handler;
 
