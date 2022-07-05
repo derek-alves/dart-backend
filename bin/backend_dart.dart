@@ -1,7 +1,6 @@
 import 'package:shelf/shelf.dart';
 
 import 'api/api.dart';
-import 'infra/header_requisition_middleware.dart';
 import 'infra/infra.dart';
 import 'services/services.dart';
 import 'utils/utils.dart';
@@ -11,7 +10,7 @@ void main() async {
 
   var cascadeHandler = Cascade()
       .add(
-        LoginApi().handler,
+        LoginApi(SecurityServiceImp()).handler,
       )
       .add(
         PublicationApi(PublicationService()).handler,
