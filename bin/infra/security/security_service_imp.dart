@@ -1,9 +1,7 @@
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:shelf/shelf.dart';
-import 'package:shelf/src/middleware.dart';
 
 import '../../utils/utils.dart';
-import 'authenticated_routes.dart';
 import 'security_service.dart';
 
 class SecurityServiceImp extends SecurityService<JWT> {
@@ -56,10 +54,7 @@ class SecurityServiceImp extends SecurityService<JWT> {
   @override
   Middleware get verifyJwt => createMiddleware(
         requestHandler: (Request request) {
-          var _authenticatedRoutes = AuthenticatedRoutes().add('login');
-
-          if (_authenticatedRoutes.authenticated(request.url.path) &&
-              request.context['jwt'] == null) {
+          if (request.context['jwt'] == null) {
             return Response.forbidden("Not Authorized");
           }
           return null;
