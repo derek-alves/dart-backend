@@ -1,6 +1,7 @@
 import 'package:shelf/shelf.dart';
 
 import 'api/api.dart';
+import 'infra/di/dependency_injector.dart';
 import 'infra/infra.dart';
 import 'services/services.dart';
 import 'utils/utils.dart';
@@ -8,6 +9,10 @@ import 'utils/utils.dart';
 void main() async {
   CustomEnv.fromFile('.env');
   SecurityService _securityService = SecurityServiceImp();
+
+  final _di = DependencyInjector();
+
+  _di.register<SecurityService>(() => SecurityServiceImp(), isSingleton: true);
 
   var cascadeHandler = Cascade()
       .add(LoginApi(_securityService).getHandler(middlewares: []))
