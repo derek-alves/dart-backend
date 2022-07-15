@@ -10,10 +10,15 @@ import 'api.dart';
 class PublicationApi extends ApiHandler {
   final GenericService<Publication> _service;
 
-  PublicationApi(this._service);
+  PublicationApi(
+    this._service,
+  );
 
   @override
-  Handler getHandler({List<Middleware>? middlewares}) {
+  Handler getHandler({
+    List<Middleware>? middlewares,
+    bool isSecurity = false,
+  }) {
     Router router = Router();
 
     router.get("/blog/noticias", (Request req) {
@@ -50,6 +55,7 @@ class PublicationApi extends ApiHandler {
 
     return createHandler(
       handler: router,
+      isSecurity: isSecurity,
       middlewares: middlewares,
     );
   }
