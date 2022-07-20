@@ -45,8 +45,7 @@ class SecurityServiceImp extends SecurityService<JWT> {
           jwt = await validateJWT(token);
         }
 
-        request.change(context: {'jwt': jwt});
-        return handler(request);
+        return handler(request.change(context: {'jwt': jwt}));
       };
     };
   }
