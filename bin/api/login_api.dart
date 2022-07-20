@@ -1,3 +1,4 @@
+import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 
@@ -15,9 +16,7 @@ class LoginApi extends ApiHandler {
 
     router.post("/login", (Request req) async {
       var token = await _securityService.generateJWT("1");
-
-      var result = await _securityService.validateJWT(token);
-      return Response.ok(result != null);
+      return Response.ok(token);
     });
 
     return createHandler(
