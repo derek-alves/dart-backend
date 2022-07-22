@@ -9,6 +9,11 @@ void main() async {
 
   final _di = Injects.initialize();
 
+  var dbConnection = await _di.get<DBConnection>().connection;
+
+  var result = await dbConnection.query("SELECT * FROM usuarios");
+  print(result);
+
   var cascadeHandler = Cascade()
       .add(_di.get<LoginApi>().getHandler(middlewares: []))
       .add(_di.get<PublicationApi>().getHandler(isSecurity: true))
