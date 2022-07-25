@@ -1,5 +1,5 @@
-abstract class DBConnection {
-  Future<dynamic> createConnection();
+abstract class DBConnection<T> {
+  Future<T> createConnection();
 
-  Future<dynamic> get connection;
+  Future<T> get connection;
 }

@@ -3,7 +3,7 @@ import 'package:mysql1/mysql1.dart';
 import '../../utils/utils.dart';
 import 'db_connection.dart';
 
-class MySqlDbConfiguration implements DBConnection {
+class MySqlDbConfiguration implements DBConnection<MySqlConnection> {
   MySqlConnection? _connection;
   @override
   Future<MySqlConnection> get connection async {
