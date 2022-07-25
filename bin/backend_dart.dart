@@ -2,6 +2,8 @@ import 'package:shelf/shelf.dart';
 
 import 'api/api.dart';
 import 'infra/infra.dart';
+import 'models/user.dart';
+import 'repositories/repostories.dart';
 import 'utils/utils.dart';
 
 void main() async {
@@ -9,9 +11,9 @@ void main() async {
 
   final _di = Injects.initialize();
 
-  var dbConnection = await _di.get<DBConnection>().connection;
+  var userRepository = _di.get<UserRepository>();
 
-  var result = await dbConnection.query("SELECT * FROM usuarios");
+  var result = await userRepository.findOne(3);
   print(result);
 
   var cascadeHandler = Cascade()
