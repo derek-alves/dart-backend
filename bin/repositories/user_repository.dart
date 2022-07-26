@@ -31,9 +31,12 @@ class UserRepository implements Repository<User> {
   }
 
   @override
-  Future delete(int id) {
-    // TODO: implement delete
-    throw UnimplementedError();
+  Future delete(int id) async {
+    var connection = await _dbConnection.connection;
+    await connection.query(
+      "DELETE from usuarios where id = ?",
+      [id],
+    );
   }
 
   @override
@@ -63,8 +66,11 @@ class UserRepository implements Repository<User> {
   }
 
   @override
-  Future update(User value) {
-    // TODO: implement update
-    throw UnimplementedError();
+  Future update(User value) async {
+    var connection = await _dbConnection.connection;
+    await connection.query(
+      "UPDATE usuarios set nome = ?, password = ? where id = ?",
+      [value.name, value.password, value.id],
+    );
   }
 }
