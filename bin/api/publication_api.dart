@@ -21,8 +21,8 @@ class PublicationApi extends ApiHandler {
   }) {
     Router router = Router();
 
-    router.get("/blog/noticias", (Request req) {
-      List<Publication> publications = _service.findAll();
+    router.get("/blog/noticias", (Request req) async {
+      List<Publication> publications = await _service.findAll();
       return Response.ok(
         jsonEncode(publications.map((e) => e.toJson()).toList()),
       );
