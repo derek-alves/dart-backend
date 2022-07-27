@@ -7,70 +7,71 @@ class UserRepository implements Repository<User> {
   UserRepository(this._dbConnection);
 
   @override
-  Future create(User value) async {
-    var connection = await _dbConnection.connection;
-
-    final queryDb = "INSERT INTO usuarios (nome,email,password) VALUES (?,?,?)";
-    var result = await connection.query(
+  Future<bool> create(User value) async {
+    var findeUser = await _executeSQLQuery(
       "SELECT * FROM usuarios WHERE email = ?",
       [value.email],
     );
 
-    if (result.isNotEmpty) {
+    if (findeUser.isNotEmpty) {
       throw Exception(
           "[ERROR/UserRepository] -> Email alreay exists: ${value.email}");
     }
 
-    await connection.query(queryDb, [
+    var result = await _executeSQLQuery(
+        "INSERT INTO usuarios (nome,email,password) VALUES (?,?,?)", [
       value.name,
       value.email,
       value.password,
     ]);
 
-    print(value.toString());
+    return result.affectedRows > 0;
   }
 
   @override
-  Future delete(int id) async {
-    var connection = await _dbConnection.connection;
-    await connection.query(
+  Future<bool> delete(int id) async {
+    var result = await _executeSQLQuery(
       "DELETE from usuarios where id = ?",
       [id],
     );
+    return result.affectedRows > 0;
   }
 
   @override
   Future<List<User>> findAll() async {
-    var connection = await _dbConnection.connection;
-    final List<User> userList = [];
-    final String querySql = "SELECT * FROM usuarios";
-    var result = await connection.query(querySql);
-    for (var userMap in result) {
-      userList.add(User.fromMap(userMap.fields));
-    }
-    return userList;
+    var result = await _executeSQLQuery("SELECT * FROM usuarios");
+    return result
+        .map(
+          (r) => User.fromMap(r.fields),
+        )
+        .toList()
+        .cast<User>();
   }
 
   @override
-  Future<User> findOne(int id) async {
-    var connection = await _dbConnection.connection;
-    var result = await connection.query(
+  Future<User?> findOne(int id) async {
+    var result = await _executeSQLQuery(
       "SELECT * FROM usuarios WHERE id = ?",
       [id],
     );
-    if (result.isEmpty) {
-      throw Exception(
-          "[ERROR/UserRepository] -> findOne for id: $id, Not Found.");
-    }
-    return User.fromMap(result.first.fields);
+
+    return result.affectedRows == 0 ? null : User.fromMap(result.first.fields);
   }
 
   @override
-  Future update(User value) async {
-    var connection = await _dbConnection.connection;
-    await connection.query(
+  Future<bool> update(User value) async {
+    var result = await _executeSQLQuery(
       "UPDATE usuarios set nome = ?, password = ? where id = ?",
       [value.name, value.password, value.id],
+    );
+    return result.affectedRows > 0;
+  }
+
+  Future _executeSQLQuery(String query, [List? params]) async {
+    var connection = await _dbConnection.connection;
+    return await connection.query(
+      query,
+      params,
     );
   }
 }
