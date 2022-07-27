@@ -40,6 +40,13 @@ class User {
     );
   }
 
+  factory User.fromRequest(Map<String, dynamic> map) {
+    return User()
+      ..name = map['nome']
+      ..email = map['email']
+      ..password = map['password'];
+  }
+
   @override
   String toString() {
     return 'User(id: $id, name: $name, email: $email isActived: $isActived, createdAt: $createdAt, updatedAt: $updatedAt)';
