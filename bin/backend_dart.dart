@@ -2,8 +2,6 @@ import 'package:shelf/shelf.dart';
 
 import 'api/api.dart';
 import 'infra/infra.dart';
-import 'models/user.dart';
-import 'repositories/repostories.dart';
 import 'utils/utils.dart';
 
 void main() async {
@@ -11,14 +9,10 @@ void main() async {
 
   final _di = Injects.initialize();
 
-  var userRepository = _di.get<UserRepository>();
-
-  var result = await userRepository.findOne(3);
-  print(result);
-
   var cascadeHandler = Cascade()
       .add(_di.get<LoginApi>().getHandler(middlewares: []))
       .add(_di.get<PublicationApi>().getHandler(isSecurity: true))
+      .add(_di.get<UserApi>().getHandler(isSecurity: true))
       .handler;
 
   var handler = Pipeline()
