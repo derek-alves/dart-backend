@@ -1,3 +1,5 @@
+import 'package:password_dart/password_dart.dart';
+
 import '../../models/models.dart';
 import '../../repositories/repostories.dart';
 import '../generic_service.dart';
@@ -19,6 +21,8 @@ class UserService implements GenericService<User> {
     if (value.id != null) {
       return await _userRepository.update(value);
     } else {
+      final hash = Password.hash(value.password!, PBKDF2());
+      value.password = hash;
       return await _userRepository.create(value);
     }
   }
