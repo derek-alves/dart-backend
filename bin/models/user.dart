@@ -40,6 +40,12 @@ class User {
     );
   }
 
+  factory User.fromEmail(Map<String, dynamic> map) {
+    return User()
+      ..id = map['id']?.toInt()
+      ..password = map['password'];
+  }
+
   factory User.fromRequest(Map<String, dynamic> map) {
     return User()
       ..name = map['nome']
