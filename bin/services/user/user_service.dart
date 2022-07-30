@@ -26,4 +26,7 @@ class UserService implements GenericService<User> {
       return await _userRepository.create(value);
     }
   }
+
+  Future<User?> findByEmail(String email) async =>
+      await _userRepository.findByEmail(email);
 }

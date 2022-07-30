@@ -58,6 +58,17 @@ class UserRepository implements Repository<User> {
     return result.affectedRows == 0 ? null : User.fromMap(result.first.fields);
   }
 
+  Future<User?> findByEmail(String email) async {
+    var result = await _executeSQLQuery(
+      "SELECT * FROM usuarios WHERE email = ?",
+      [email],
+    );
+
+    return result.affectedRows == 0
+        ? null
+        : User.fromEmail(result.first.fields);
+  }
+
   @override
   Future<bool> update(User value) async {
     var result = await _executeSQLQuery(
