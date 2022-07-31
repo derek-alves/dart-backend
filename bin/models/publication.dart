@@ -1,41 +1,33 @@
 class Publication {
-  final int? id;
-  final String title;
-  final String body;
-  final String image;
-  final DateTime publicationDate;
-  final DateTime? updateDate;
+  int? id;
+  String? title;
+  String? description;
+  DateTime? createdDate;
+  DateTime? updateDate;
+  int? userID;
 
-  Publication({
-    required this.id,
-    required this.title,
-    required this.body,
-    required this.image,
-    required this.publicationDate,
-    this.updateDate,
-  });
+  Publication();
 
-  factory Publication.fromJson(Map map) {
-    return Publication(
-      id: map['id'] ?? '',
-      title: map['title'],
-      body: map['body'],
-      image: map['image'],
-      publicationDate: DateTime.fromMillisecondsSinceEpoch(
-        map['publicationDate'],
-      ),
-      updateDate: map['updateDate'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(
-              map['updateDate'],
-            )
-          : null,
-    );
+  factory Publication.fromMap(Map<String, dynamic> map) {
+    return Publication()
+      ..id = map['id']?.toInt()
+      ..title = map['titulo']
+      ..description = map['descricao']?.toString()
+      ..createdDate = map['dt_criacao']
+      ..updateDate = map['dt_autalizacao']
+      ..userID = map['id_usuario']?.toInt();
   }
-  Map toJson() => {
-        "id": id,
-        "title": title,
-        "body": body,
-        "image": image,
-        "publicationDate": publicationDate.toString()
+
+  factory Publication.fromRequest(Map<String, dynamic> map) {
+    return Publication()
+      ..title = map['title']
+      ..description = map['description']
+      ..userID = map['userID']?.toInt();
+  }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'title': title,
+        'description': description,
       };
 }
