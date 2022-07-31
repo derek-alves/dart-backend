@@ -8,7 +8,7 @@ class UserRepository implements Repository<User> {
 
   @override
   Future<bool> create(User value) async {
-    var findeUser = await _executeSQLQuery(
+    var findeUser = await _dbConnection.execQuery(
       "SELECT * FROM usuarios WHERE email = ?",
       [value.email],
     );
@@ -18,7 +18,7 @@ class UserRepository implements Repository<User> {
           "[ERROR/UserRepository] -> Email alreay exists: ${value.email}");
     }
 
-    var result = await _executeSQLQuery(
+    var result = await _dbConnection.execQuery(
         "INSERT INTO usuarios (nome,email,password) VALUES (?,?,?)", [
       value.name,
       value.email,
@@ -30,7 +30,7 @@ class UserRepository implements Repository<User> {
 
   @override
   Future<bool> delete(int id) async {
-    var result = await _executeSQLQuery(
+    var result = await _dbConnection.execQuery(
       "DELETE from usuarios where id = ?",
       [id],
     );
@@ -39,7 +39,7 @@ class UserRepository implements Repository<User> {
 
   @override
   Future<List<User>> findAll() async {
-    var result = await _executeSQLQuery("SELECT * FROM usuarios");
+    var result = await _dbConnection.execQuery("SELECT * FROM usuarios");
     return result
         .map(
           (r) => User.fromMap(r.fields),
@@ -50,7 +50,7 @@ class UserRepository implements Repository<User> {
 
   @override
   Future<User?> findOne(int id) async {
-    var result = await _executeSQLQuery(
+    var result = await _dbConnection.execQuery(
       "SELECT * FROM usuarios WHERE id = ?",
       [id],
     );
@@ -59,7 +59,7 @@ class UserRepository implements Repository<User> {
   }
 
   Future<User?> findByEmail(String email) async {
-    var result = await _executeSQLQuery(
+    var result = await _dbConnection.execQuery(
       "SELECT * FROM usuarios WHERE email = ?",
       [email],
     );
@@ -71,18 +71,10 @@ class UserRepository implements Repository<User> {
 
   @override
   Future<bool> update(User value) async {
-    var result = await _executeSQLQuery(
+    var result = await _dbConnection.execQuery(
       "UPDATE usuarios set nome = ?, password = ? where id = ?",
       [value.name, value.password, value.id],
     );
     return result.affectedRows > 0;
-  }
-
-  Future _executeSQLQuery(String query, [List? params]) async {
-    var connection = await _dbConnection.connection;
-    return await connection.query(
-      query,
-      params,
-    );
   }
 }
