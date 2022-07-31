@@ -21,34 +21,26 @@ class PublicationApi extends ApiHandler {
   }) {
     Router router = Router();
 
-    router.get("/blog/noticias", (Request req) async {
+    router.get("/noticias", (Request req) async {
       List<Publication> publications = await _service.findAll();
       return Response.ok(
         jsonEncode(publications.map((e) => e.toJson()).toList()),
       );
     });
 
-    router.post("/blog/noticias", (Request req) async {
+    router.post("/noticias", (Request req) async {
       var body = await req.readAsString();
-      _service.save(Publication.fromJson(jsonDecode(body)));
-      return Response(201);
+      var result = await _service.save(Publication.fromMap(jsonDecode(body)));
+      return result ? Response(201) : Response(500);
     });
 
-    router.put("/blog/noticias", (Request req) {
+    router.put("/noticias", (Request req) {
       String? id = req.url.queryParameters['id'];
-      _service.save(
-        Publication(
-          id: 0,
-          title: "titulo",
-          body: "descrição",
-          image: 'aaaaa',
-          publicationDate: DateTime.now(),
-        ),
-      );
+
       return Response.ok('Choveu hoje');
     });
 
-    router.delete("/blog/noticias", (Request req) {
+    router.delete("/noticias", (Request req) {
       _service.delete(2);
       return Response.ok('Choveu hoje');
     });
