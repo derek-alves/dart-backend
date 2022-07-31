@@ -1,8 +1,8 @@
 import '../../api/api.dart';
 import '../../api/user_api.dart';
 import '../../models/models.dart';
+import '../../repositories/publication_repository.dart';
 import '../../repositories/repostories.dart';
-import '../../services/authentication/login_service.dart';
 import '../../services/services.dart';
 import '../infra.dart';
 
@@ -14,7 +14,9 @@ class Injects {
 
     di.register<SecurityService>(() => SecurityServiceImp());
 
-    di.register<GenericService<Publication>>(() => PublicationService());
+    di.register<PublicationRepository>(() => PublicationRepository(di.get()));
+    di.register<GenericService<Publication>>(
+        () => PublicationService(di.get()));
 
     di.register<PublicationApi>(() => PublicationApi(di.get()));
 
